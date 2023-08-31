@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/Users/fdl9/Desktop/HElib/build/CMakeFiles/helib_external"
+		},
+		{
+			"file" : "/Users/fdl9/Desktop/HElib/build/CMakeFiles/helib_external.rule"
+		},
+		{
+			"file" : "/Users/fdl9/Desktop/HElib/build/CMakeFiles/helib_external-complete.rule"
+		},
+		{
+			"file" : "/Users/fdl9/Desktop/HElib/build/dependencies/Stamp/helib_external/helib_external-build.rule"
+		},
+		{
+			"file" : "/Users/fdl9/Desktop/HElib/build/dependencies/Stamp/helib_external/helib_external-configure.rule"
+		},
+		{
+			"file" : "/Users/fdl9/Desktop/HElib/build/dependencies/Stamp/helib_external/helib_external-download.rule"
+		},
+		{
+			"file" : "/Users/fdl9/Desktop/HElib/build/dependencies/Stamp/helib_external/helib_external-install.rule"
+		},
+		{
+			"file" : "/Users/fdl9/Desktop/HElib/build/dependencies/Stamp/helib_external/helib_external-mkdir.rule"
+		},
+		{
+			"file" : "/Users/fdl9/Desktop/HElib/build/dependencies/Stamp/helib_external/helib_external-patch.rule"
+		},
+		{
+			"file" : "/Users/fdl9/Desktop/HElib/build/dependencies/Stamp/helib_external/helib_external-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"helib_external"
+		],
+		"name" : "helib_external"
+	}
+}

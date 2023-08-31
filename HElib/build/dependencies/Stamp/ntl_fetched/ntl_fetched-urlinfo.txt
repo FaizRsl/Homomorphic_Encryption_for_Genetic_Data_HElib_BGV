@@ -1,0 +1,12 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The download step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+method=url
+command=/usr/local/Cellar/cmake/3.27.2/bin/cmake;-P;/Users/fdl9/Desktop/HElib/build/dependencies/Stamp/ntl_fetched/download-ntl_fetched.cmake;COMMAND;/usr/local/Cellar/cmake/3.27.2/bin/cmake;-P;/Users/fdl9/Desktop/HElib/build/dependencies/Stamp/ntl_fetched/verify-ntl_fetched.cmake;COMMAND;/usr/local/Cellar/cmake/3.27.2/bin/cmake;-P;/Users/fdl9/Desktop/HElib/build/dependencies/Stamp/ntl_fetched/extract-ntl_fetched.cmake
+source_dir=/Users/fdl9/Desktop/HElib/build/dependencies/Source/ntl_fetched
+work_dir=/Users/fdl9/Desktop/HElib/build/dependencies/Source
+url(s)=https://libntl.org/ntl-11.5.1.tar.gz;https://www.shoup.net/ntl/ntl-11.5.1.tar.gz
+hash=SHA256=210d06c31306cbc6eaf6814453c56c776d9d8e8df36d74eb306f6a523d1c6a8a
+no_extract=
+
