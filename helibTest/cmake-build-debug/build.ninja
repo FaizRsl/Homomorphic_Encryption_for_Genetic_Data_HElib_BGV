@@ -56,6 +56,20 @@ build CMakeFiles/main.dir/main.cpp.o: CXX_COMPILER__main_unscanned_Debug /Users/
   OBJECT_DIR = CMakeFiles/main.dir
   OBJECT_FILE_DIR = CMakeFiles/main.dir
 
+build CMakeFiles/main.dir/comparator.cpp.o: CXX_COMPILER__main_unscanned_Debug /Users/fdl9/Desktop/FYP_HElib/helibTest/comparator.cpp || cmake_object_order_depends_target_main
+  DEP_FILE = CMakeFiles/main.dir/comparator.cpp.o.d
+  FLAGS = -std=c++17 -g -g -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack/include
+  OBJECT_DIR = CMakeFiles/main.dir
+  OBJECT_FILE_DIR = CMakeFiles/main.dir
+
+build CMakeFiles/main.dir/tools.cpp.o: CXX_COMPILER__main_unscanned_Debug /Users/fdl9/Desktop/FYP_HElib/helibTest/tools.cpp || cmake_object_order_depends_target_main
+  DEP_FILE = CMakeFiles/main.dir/tools.cpp.o.d
+  FLAGS = -std=c++17 -g -g -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack/include
+  OBJECT_DIR = CMakeFiles/main.dir
+  OBJECT_FILE_DIR = CMakeFiles/main.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target main
@@ -64,7 +78,7 @@ build CMakeFiles/main.dir/main.cpp.o: CXX_COMPILER__main_unscanned_Debug /Users/
 #############################################
 # Link the executable main
 
-build main: CXX_EXECUTABLE_LINKER__main_Debug CMakeFiles/main.dir/main.cpp.o | /Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack//lib/libhelib.a /Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack//lib/libgmp.10.dylib /Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack//lib/libntl.44.dylib /Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack/lib/libgmp.dylib/ /Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack/lib/libntl.dylib/
+build main: CXX_EXECUTABLE_LINKER__main_Debug CMakeFiles/main.dir/main.cpp.o CMakeFiles/main.dir/comparator.cpp.o CMakeFiles/main.dir/tools.cpp.o | /Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack//lib/libhelib.a /Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack//lib/libgmp.10.dylib /Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack//lib/libntl.44.dylib /Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack/lib/libgmp.dylib/ /Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack/lib/libntl.dylib/
   FLAGS = -std=c++17 -g -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk
   LINK_LIBRARIES = -Wl,-rpath,/Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack/lib  /Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack//lib/libhelib.a  /Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack//lib/libgmp.10.dylib  /Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack//lib/libntl.44.dylib  /Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack/lib/libgmp.dylib/  /Users/fdl9/Desktop/FYP_HElib/HElib/helib_pack/lib/libntl.dylib/
   OBJECT_DIR = CMakeFiles/main.dir

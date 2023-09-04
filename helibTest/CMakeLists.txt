@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)  # Or use the appropriate C++ version
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
 # Add all your source files here
-add_executable(main main.cpp)  # Add all your .cpp files here
+add_executable(main main.cpp comparator.cpp tools.cpp)  # Add all your .cpp files here
 
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
