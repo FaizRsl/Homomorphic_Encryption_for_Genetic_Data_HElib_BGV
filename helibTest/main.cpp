@@ -17,6 +17,31 @@ using namespace NTL;
 using namespace helib;
 using namespace he_cmp;
 
+// the main function that takes  arguments (type in Terminal: ./sorting_circuit argv[1] argv[2] argv[3] argv[4] argv[5] argv[6] argv[7] argv[8])
+// variable[0] - the plaintext modulus
+// variable[1] - the dimension of a vector space over a finite field
+// variable[2] - the order of the cyclotomic ring
+// variable[3] - the bitsize of the ciphertext modulus in ciphertexts (HElib increases it to fit the moduli chain). The modulus used for public-key generation
+// variable[4] - the length of vectors to be compared
+// variable[5] - the number of values to be sorted
+// variable[6] - the number of experiment repetitions
+// variable[7] - circuit type (U, B or T)
+// variable[8] - the number of tournament stages
+
+// some parameters for comparison testing
+// B 7 1 75 90 1 10 y
+// B 7 1 300 90 1 10 y
+// U 17 1 145 120 1 10 y
+
+// some parameters for min/max testing
+// 7 1 75 90 1 4 1 10 y
+// 7 1 300 90 1 6 2 10 y
+// 17 1 145 120 1 7 2 10 y
+
+// some parameters for sorting testing
+// 7 1 75 90 1 4 10 y
+// 7 1 300 90 1 6 10 y
+// 17 1 145 120 1 7 10 y
 int main(int argc, char* argv[])
 {
     /*  Example of BGV scheme  */
