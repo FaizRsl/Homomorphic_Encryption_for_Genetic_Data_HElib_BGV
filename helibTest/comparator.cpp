@@ -1003,6 +1003,17 @@ void Comparator::less_than_mod_any(Ctxt& ctxt_res, const Ctxt& ctxt_x, const Ctx
 	ctxt_res.multiplyBy(x_plus_1);
 	// Y*(x+1)*f(x)
 	ctxt_res.multiplyBy(Y);
+
+    const EncryptedArray& ea = m_context.getEA();
+    unsigned long ord_p = m_context.getOrdP();
+    long nSlots = ea.size();
+    vector<ZZX> decrypted(nSlots);
+    ea.decrypt(ctxt_res, m_sk, decrypted);
+
+    for(int i=0; i<nSlots; i++){
+        printZZX(cout, decrypted[i], ord_p);
+        cout << endl;
+    }
 	
 	if(m_verbose)
 	{
