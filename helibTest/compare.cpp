@@ -25,7 +25,7 @@ using namespace NTL;
 using namespace helib;
 using namespace he_cmp;
 
-void compare_function(char *argv[]);
+// void compare_function(char *argv[]);
 
 // some parameters for quick testing
 // B 7 1 75 90 1 10 y
@@ -129,5 +129,8 @@ void compare_function(char *argv[]) {
     //test comparison circuit
     comparator.test_compare(runs);
 
+    cout<<"Done with test_compare"<<endl;
+
     //printAllTimers(cout);
 }
+

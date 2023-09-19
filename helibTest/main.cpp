@@ -190,6 +190,12 @@ int main(int argc, char* argv[])
             break;
     }
 
+    cout<<"Done with main"<<endl;
+
+    int s=0;
+    for(int i=0;i<1000;i++)
+        s+=i;
+    cout<<"s: "<<s<<endl;
     /*fclose(in);
     fclose(out);*/
     return 0;

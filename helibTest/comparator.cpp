@@ -8,6 +8,10 @@
 #include <NTL/mat_ZZ_pE.h>
 #include <helib/Ptxt.h>
 
+
+#include <chrono>
+using namespace std::chrono;
+
 using namespace he_cmp;
 
 // polynomial coefficients of bivariate polynomial decomposition as in Theorem 2 for different plaintext moduli
@@ -669,7 +673,7 @@ Comparator::Comparator(const Context& context, CircuitType type, unsigned long d
 
 	create_all_shift_masks();
 	create_poly();
-	extraction_init();
+	// extraction_init();
 }
 
 const DoubleCRT& Comparator::get_mask(double& size, long index) const
@@ -944,6 +948,7 @@ void Comparator::less_than_mod_7(Ctxt& ctxt_res, const Ctxt& ctxt_x, const Ctxt&
 
 	if(m_verbose)
 	{
+		cout<<"Printing ctxt_res: "<<endl;
 		print_decrypted(ctxt_res);
 		cout << endl;
 	}
@@ -1006,20 +1011,20 @@ void Comparator::less_than_mod_any(Ctxt& ctxt_res, const Ctxt& ctxt_x, const Ctx
 
     const EncryptedArray& ea = m_context.getEA();
     unsigned long ord_p = m_context.getOrdP();
-    long nSlots = ea.size();
-    vector<ZZX> decrypted(nSlots);
-    ea.decrypt(ctxt_res, m_sk, decrypted);
+    // long nSlots = ea.size();
+    // vector<ZZX> decrypted(nSlots);
+    // ea.decrypt(ctxt_res, m_sk, decrypted);
 
-    for(int i=0; i<nSlots; i++){
-        printZZX(cout, decrypted[i], ord_p);
-        cout << endl;
-    }
+    // for(int i=0; i<nSlots; i++){
+    //     printZZX(cout, decrypted[i], ord_p);
+    //     cout << endl;
+    // }
 	
-	if(m_verbose)
-	{
-		print_decrypted(ctxt_res);
-		cout << endl;
-	}
+	// if(m_verbose)
+	// {
+	// 	print_decrypted(ctxt_res);
+	// 	cout << endl;
+	// }
 }
 
 void Comparator::evaluate_univar_less_poly(Ctxt& ret, Ctxt& ctxt_p_1, const Ctxt& x) const
@@ -1234,14 +1239,18 @@ void Comparator::less_than_bivar(Ctxt& ctxt_res, const Ctxt& ctxt_x, const Ctxt&
 
   if(p > 7)
   {
+	cout<<"Starting with p=7"<<endl;
     less_than_mod_any(ctxt_res, ctxt_x, ctxt_y);
   }
 
-  if(m_verbose)
-  {
-    print_decrypted(ctxt_res);
-    cout << endl;
-  }
+   cout<<"Printing result after"<<endl;
+   cout<<"################################################"<<endl;
+
+//   if(m_verbose)
+//   {
+//     print_decrypted(ctxt_res);
+//     cout << endl;
+//   }
 
   HELIB_NTIMER_STOP(ComparisonCircuitBivar);
 }
@@ -1306,7 +1315,7 @@ void Comparator::is_zero(Ctxt& ctxt_res, const Ctxt& ctxt_z, long pow) const
 
 void Comparator::compare(Ctxt& ctxt_res, const Ctxt& ctxt_x, const Ctxt& ctxt_y) const
 {
-	HELIB_NTIMER_START(Comparison);
+	// HELIB_NTIMER_START(Comparison);
 
 	vector<Ctxt> ctxt_less_p;
 	vector<Ctxt> ctxt_eq_p;
@@ -1317,50 +1326,50 @@ void Comparator::compare(Ctxt& ctxt_res, const Ctxt& ctxt_x, const Ctxt& ctxt_y)
 		//cout << "Extraction" << endl;
 		// extract mod p coefficients
 		vector<Ctxt> ctxt_x_p;
-		extract_mod_p(ctxt_x_p, ctxt_x);
+		// extract_mod_p(ctxt_x_p, ctxt_x);
+		ctxt_x_p.push_back(ctxt_x);
 
-		if(m_verbose)
-	    {
-	    	for (long iCoef = 0; iCoef < m_slotDeg; iCoef++)
-	    	{
-	    		cout << "Ctxt x with coefficient " << iCoef << endl;
-		    	print_decrypted(ctxt_x_p[iCoef]);
-		    	cout << endl;
-		    }
-		}
+		// if(m_verbose)
+	    // {
+	    // 	for (long iCoef = 0; iCoef < m_slotDeg; iCoef++)
+	    // 	{
+	    // 		cout << "Ctxt x with coefficient " << iCoef << endl;
+		//     	print_decrypted(ctxt_x_p[iCoef]);
+		//     	cout << endl;
+		//     }
+		// }
 
 		vector<Ctxt> ctxt_y_p;
-		extract_mod_p(ctxt_y_p, ctxt_y);
+		ctxt_y_p.push_back(ctxt_y);
+		// extract_mod_p(ctxt_y_p, ctxt_y);
 
-		if(m_verbose)
-	    {
-	    	for (long iCoef = 0; iCoef < m_slotDeg; iCoef++)
-	    	{
-	    		cout << "Ctxt y with coefficient " << iCoef << endl;
-		    	print_decrypted(ctxt_y_p[iCoef]);
-		    	cout << endl;
-		    }
-		}
+		// if(m_verbose)
+	    // {
+	    // 	for (long iCoef = 0; iCoef < m_slotDeg; iCoef++)
+	    // 	{
+	    // 		cout << "Ctxt y with coefficient " << iCoef << endl;
+		//     	print_decrypted(ctxt_y_p[iCoef]);
+		//     	cout << endl;
+		//     }
+		// }
 
-		//cout << "Compute the less-than function modulo p" << endl;
-		for (long iCoef = 0; iCoef < m_slotDeg; iCoef++)
-		{
-			Ctxt ctxt_tmp = Ctxt(ctxt_x.getPubKey());
-			less_than_bivar(ctxt_tmp, ctxt_x_p[iCoef], ctxt_y_p[iCoef]);
-			ctxt_less_p.push_back(ctxt_tmp);
-		}
+		Ctxt ctxt_tmp = Ctxt(ctxt_x.getPubKey());
+		less_than_bivar(ctxt_tmp, ctxt_x_p[0], ctxt_y_p[0]);
+		ctxt_less_p.push_back(ctxt_tmp);
 
 		//cout << "Compute the equality function modulo p" << endl;
-		for (long iCoef = 0; iCoef < m_slotDeg; iCoef++)
-		{
-			// Subtraction z = x - y
-			//cout << "Subtraction" << endl;
-			Ctxt ctxt_z = ctxt_x_p[iCoef];
-			ctxt_z -= ctxt_y_p[iCoef];
-			Ctxt ctxt_tmp = Ctxt(ctxt_z.getPubKey());
-			is_zero(ctxt_tmp, ctxt_z);
-			ctxt_eq_p.push_back(ctxt_tmp);
-		}
+		// Ctxt ctxt_z = ctxt_x_p[0];
+		// ctxt_z -= ctxt_y_p[0];
+		// Ctxt ctxt_tmp = Ctxt(ctxt_z.getPubKey());
+		// is_zero(ctxt_tmp, ctxt_z);
+		// ctxt_eq_p.push_back(ctxt_tmp);
+
+		cout<<"Bivariate comparison result"<<endl;
+		print_decrypted(ctxt_less_p[0]);
+    	cout << endl;
+
+		cout<<"Bivariate finished"<<endl;
+
 	}
 	else // univariate circuit
 	{
@@ -1369,136 +1378,140 @@ void Comparator::compare(Ctxt& ctxt_res, const Ctxt& ctxt_x, const Ctxt& ctxt_y)
 		Ctxt ctxt_z = ctxt_x;
 		ctxt_z -= ctxt_y;
 
-		if(m_verbose)
-		{
-			print_decrypted(ctxt_z);
-			cout << endl;
-		}
-
-		// extract mod p coefficients
-		//cout << "Extraction" << endl;
 		vector<Ctxt> ctxt_z_p;
-		extract_mod_p(ctxt_z_p, ctxt_z);
+		ctxt_z_p.push_back(ctxt_z);
+		// extract_mod_p(ctxt_z_p, ctxt_z);
 
-		if(m_verbose)
-	    {
-	    	for (long iCoef = 0; iCoef < m_slotDeg; iCoef++)
-	    	{
-	    		cout << "Ctxt x with coefficient " << iCoef << endl;
-		    	print_decrypted(ctxt_z_p[iCoef]);
-		    	cout << endl;
-		    }
-		}
+		// if(m_verbose)
+	    // {
+	    // 	for (long iCoef = 0; iCoef < m_slotDeg; iCoef++)
+	    // 	{
+	    // 		cout << "Ctxt x with coefficient " << iCoef << endl;
+		//     	print_decrypted(ctxt_z_p[iCoef]);
+		//     	cout << endl;
+		//     }
+		// }
 
 		//cout << "Compute the less-than and equality functions modulo p" << endl;
-		for (long iCoef = 0; iCoef < m_slotDeg; iCoef++)
+		for (long iCoef = 0; iCoef < 1; iCoef++)
 		{
 			Ctxt ctxt_tmp = Ctxt(ctxt_z.getPubKey());
-			Ctxt ctxt_tmp_eq = Ctxt(ctxt_z.getPubKey());
+			// Ctxt ctxt_tmp_eq = Ctxt(ctxt_z.getPubKey());
 
+			Ctxt ctxt_tmp_eq = Ctxt(ctxt_z.getPubKey());
 			// compute polynomial function for 'z < 0'
 			//cout << "Compute univariate comparison polynomial" << endl;
 			evaluate_univar_less_poly(ctxt_tmp, ctxt_tmp_eq, ctxt_z_p[iCoef]);
 
-			if(m_verbose)
-			{
-			  cout << "Result of the less-than function" << endl;
-			  print_decrypted(ctxt_tmp);
-			  cout << endl;
-			}
+			// if(m_verbose)
+			// {
+			//   cout << "Result of the less-than function" << endl;
+			//   print_decrypted(ctxt_tmp);
+			//   cout << endl;
+			// }
 
 			ctxt_less_p.push_back(ctxt_tmp);
 
 			//cout << "Computing NOT" << endl;
 			//compute 1 - mapTo01(r_i*(x_i - y_i))
-			ctxt_tmp_eq.negate();
-			ctxt_tmp_eq.addConstant(ZZ(1));
+			// ctxt_tmp_eq.negate();
+			// ctxt_tmp_eq.addConstant(ZZ(1));
 
-			if(m_verbose)
-			{
-			  cout << "Result of the equality function" << endl;
-			  print_decrypted(ctxt_tmp_eq);
-			  cout << endl;
-			}
+			// if(m_verbose)
+			// {
+			//   cout << "Result of the equality function" << endl;
+			//   print_decrypted(ctxt_tmp_eq);
+			//   cout << endl;
+			// }
 
-			ctxt_eq_p.push_back(ctxt_tmp_eq);
-		}	
+			// ctxt_eq_p.push_back(ctxt_tmp_eq);
+		}
+
+		cout<<"Univariate comparison result"<<endl;
+		print_decrypted(ctxt_less_p[0]);
+    	cout << endl;
+
+		cout<<"Univariate finished"<<endl;	
 	}
 
 	//cout << "Compare digits" << endl;
-	Ctxt ctxt_less = ctxt_less_p[m_slotDeg-1];
-	Ctxt ctxt_eq = ctxt_eq_p[m_slotDeg-1];
+	Ctxt ctxt_less = ctxt_less_p[0];
+	// Ctxt ctxt_eq = ctxt_eq_p[0];
 
-	for (long iCoef = m_slotDeg-2; iCoef >= 0; iCoef--)
-	{
-		Ctxt tmp = ctxt_eq;
-		tmp.multiplyBy(ctxt_less_p[iCoef]);
-		ctxt_less += tmp;
+	// for (long iCoef = m_slotDeg-2; iCoef >= 0; iCoef--)
+	// {
+	// 	Ctxt tmp = ctxt_eq;
+	// 	tmp.multiplyBy(ctxt_less_p[iCoef]);
+	// 	ctxt_less += tmp;
 
-		ctxt_eq.multiplyBy(ctxt_eq_p[iCoef]);
-	}
+	// 	ctxt_eq.multiplyBy(ctxt_eq_p[iCoef]);
+	// }
 
-	if(m_verbose)
-	{
-		cout << "Comparison results" << endl;
-		print_decrypted(ctxt_less);
-		cout << endl;
+	// if(m_verbose)
+	// {
+	// 	cout << "Comparison results" << endl;
+	// 	print_decrypted(ctxt_less);
+	// 	cout << endl;
 
-		cout << "Equality results" << endl;
-		print_decrypted(ctxt_eq);
-		cout << endl;
-	}
+	// 	// cout << "Equality results" << endl;
+	// 	// print_decrypted(ctxt_eq);
+	// 	// cout << endl;
+	// }
 
-	if(m_expansionLen == 1)
-	{
-		ctxt_res = ctxt_less;
-		return;
-	}
+	ctxt_res = ctxt_less;
+	cout<<"Returning from compare()"<<endl;
+	return;
+
+	// if(m_expansionLen == 1)
+	// {
+	// 	ctxt_res = ctxt_less;
+	// 	return;
+	// }
 
 
-	//compute running products: prod_i 1 - (x_i - y_i)^{p^d-1}
-	//cout << "Rotating and multiplying slots with equalities" << endl;
-	shift_and_mul(ctxt_eq, 0);
+	// //compute running products: prod_i 1 - (x_i - y_i)^{p^d-1}
+	// //cout << "Rotating and multiplying slots with equalities" << endl;
+	// shift_and_mul(ctxt_eq, 0);
 
-	if(m_verbose)
-	{
-		print_decrypted(ctxt_eq);
-		cout << endl;
-	}
+	// if(m_verbose)
+	// {
+	// 	print_decrypted(ctxt_eq);
+	// 	cout << endl;
+	// }
 
-	//Remove the least significant digit and shift to the left
-	//cout << "Remove the least significant digit" << endl;
-	batch_shift_for_mul(ctxt_eq, 0, -1);
+	// //Remove the least significant digit and shift to the left
+	// //cout << "Remove the least significant digit" << endl;
+	// batch_shift_for_mul(ctxt_eq, 0, -1);
 
-	if(m_verbose)
-	{
-		print_decrypted(ctxt_eq);
-		cout << endl;
-	}
+	// if(m_verbose)
+	// {
+	// 	print_decrypted(ctxt_eq);
+	// 	cout << endl;
+	// }
 
-	//cout << "Final result" << endl;
+	// //cout << "Final result" << endl;
 
-	ctxt_res = ctxt_eq;
-	ctxt_res.multiplyBy(ctxt_less);
-	shift_and_add(ctxt_res, 0);
+	// ctxt_res = ctxt_eq;
+	// ctxt_res.multiplyBy(ctxt_less);
+	// shift_and_add(ctxt_res, 0);
 
-	if(m_verbose)
-	{
-		print_decrypted(ctxt_res);
-		cout << endl;
-	}
+	// // if(m_verbose)
+	// // {
+	// // 	print_decrypted(ctxt_res);
+	// // 	cout << endl;
+	// // }
 
-	if(m_verbose)
-    {
-      cout << "Input x: " << endl;
-      print_decrypted(ctxt_x);
-      cout << endl;
-      cout << "Input y: " << endl;
-      print_decrypted(ctxt_y);
-      cout << endl;
-    }	
+	// // if(m_verbose)
+    // // {
+    // //   cout << "Input x: " << endl;
+    // //   print_decrypted(ctxt_x);
+    // //   cout << endl;
+    // //   cout << "Input y: " << endl;
+    // //   print_decrypted(ctxt_y);
+    // //   cout << endl;
+    // // }	
 
-    HELIB_NTIMER_STOP(Comparison);
+    // // HELIB_NTIMER_STOP(Comparison);
 }
 
 void Comparator::min_max_digit(Ctxt& ctxt_min, Ctxt& ctxt_max, const Ctxt& ctxt_x, const Ctxt& ctxt_y) const
@@ -2272,14 +2285,11 @@ void Comparator::test_sorting(int num_to_sort, long runs) const
 
 void Comparator::test_compare(long runs) const
 {
-  //reset timers
-  setTimersOn();
+//   //reset timers
+//   setTimersOn();
   
-  // initialize the random generator
-  random_device rd;
-  mt19937 eng(rd());
-  uniform_int_distribution<unsigned long> distr_u;
-  uniform_int_distribution<long> distr_i;
+  cout<<"Input n1 and n2"<<endl;
+  int n1, n2; cin>>n1>>n2;
 
   // get EncryptedArray
   const EncryptedArray& ea = m_context.getEA();
@@ -2293,128 +2303,27 @@ void Comparator::test_compare(long runs) const
   //order of p
   unsigned long ord_p = m_context.getOrdP();
 
-  //amount of numbers in one ciphertext
-  unsigned long numbers_size = nslots / m_expansionLen;
+  vector<ZZX> expected_result(nslots);
+    // vector<ZZX> decrypted(nslots);
 
-  // number of slots occupied by encoded numbers
-  unsigned long occupied_slots = numbers_size * m_expansionLen;
+	if (n1<n2)
+	{
+		expected_result[0] = ZZX(INIT_MONO, 0, 1);
+	}
+	else
+	{
+		expected_result[0] = ZZX(INIT_MONO, 0, 0);
+	}
 
-  //encoding base, ((p+1)/2)^d
-  //if 2-variable comparison polynomial is used, it must be p^d
-  unsigned long enc_base = (p + 1) >> 1;
-  if (m_type == BI || m_type == TAN)
-  {
-  	enc_base = p;
-  }
-
-  unsigned long digit_base = power_long(enc_base, m_slotDeg);
-
-  //check that field_size^expansion_len fits into 64-bits
-  int space_bit_size = static_cast<int>(ceil(m_expansionLen * log2(digit_base)));
-  cout << "Space bit size " << space_bit_size << endl;
-  unsigned long input_range = ULONG_MAX;
-  if(space_bit_size < 64)
-  {
-    //input_range = power_long(field_size, expansion_len);
-    input_range = power_long(digit_base, m_expansionLen);
-  }
-  cout << "Maximal input: " << input_range << endl;
-
-  long min_capacity = 1000;
-  long capacity;
-  for (int run = 0; run < runs; run++)
-  {
-    printf("Run %d started\n", run);
-
-    vector<ZZX> expected_result(occupied_slots);
-    vector<ZZX> decrypted(occupied_slots);
+	cout<<"Expected: "<<endl;
+	printZZX(cout,expected_result[0], ord_p);
 
     // Create the plaintext polynomials for the text and for the pattern
     vector<ZZX> pol_x(nslots);
     vector<ZZX> pol_y(nslots);
-    
-    unsigned long input_x;
-    unsigned long input_y;
-    ZZX pol_slot;
 
-    for (int i = 0; i < numbers_size; i++)
-    {
-      input_x = distr_u(eng) % input_range;
-      input_y = distr_u(eng) % input_range;
-
-      if(m_verbose)
-      {
-        cout << "Input for x[" << i <<"]: ";
-        cout << input_x << endl;
-        cout << "Input for y[" << i <<"]: ";
-        cout << input_y << endl;
-      }
-
-      if (input_x < input_y)
-      {
-        expected_result[i * m_expansionLen] = ZZX(INIT_MONO, 0, 1);
-      }
-      else
-      {
-        expected_result[i * m_expansionLen] = ZZX(INIT_MONO, 0, 0);
-      }
-
-      vector<long> decomp_int_x;
-      vector<long> decomp_int_y;
-      vector<long> decomp_char;
-
-      //decomposition of input integers
-      digit_decomp(decomp_int_x, input_x, digit_base, m_expansionLen);
-      digit_decomp(decomp_int_y, input_y, digit_base, m_expansionLen);
-
-      if(m_verbose)
-      {
-      	cout << "Input decomposition into digits" << endl;
-      	for(int j = 0; j < m_expansionLen; j++)
-      	{
-      		cout << decomp_int_x[j] << " " << decomp_int_y[j] << endl;
-      	}
-      }
-
-      //encoding of slots
-      for (int j = 0; j < m_expansionLen; j++)
-      {
-          //decomposition of a digit
-          int_to_slot(pol_slot, decomp_int_x[j], enc_base);
-          pol_x[i * m_expansionLen + j] = pol_slot;
-      }
-
-      for (int j = 0; j < m_expansionLen; j++)
-      {
-          //decomposition of a digit
-          int_to_slot(pol_slot, decomp_int_y[j], enc_base);
-          pol_y[i * m_expansionLen + j] = pol_slot;
-      }
-    }
-
-    if(m_verbose)
-    {
-      cout << "Input" << endl;
-      for(int i = 0; i < nslots; i++)
-      {
-          if(IsZero(pol_x[i])) {
-              cout << "[0]";
-              printZZX(cout, pol_y[i], ord_p);
-              cout << endl;
-          }
-          else if(IsZero(pol_y[i])) {
-              printZZX(cout, pol_x[i], ord_p);
-              cout << "[0]";
-              cout << endl;
-          }
-          else{
-              printZZX(cout, pol_x[i], ord_p);
-              printZZX(cout, pol_y[i], ord_p);
-              cout << endl;
-          }
-
-      }
-    }
+	pol_x[0]=ZZX(INIT_MONO, 0, n1);
+	pol_y[0]=ZZX(INIT_MONO, 0, n2);
 
     Ctxt ctxt_x(m_pk);
     Ctxt ctxt_y(m_pk);
@@ -2425,70 +2334,103 @@ void Comparator::test_compare(long runs) const
 
     // comparison function
     cout << "Start of comparison" << endl;
+
+	auto start = high_resolution_clock::now();
     compare(ctxt_res, ctxt_x, ctxt_y);
+	auto stop = high_resolution_clock::now();
 
-    if(m_verbose)
-    {
-      cout << "Input" << endl;
-      for(int j = 0; j < nslots; j++)
-      {
-          if(IsZero(pol_x[j])) {
-              cout << "[0]";
-              printZZX(cout, pol_y[j], ord_p);
-              cout << endl;
-          }
-          else if(IsZero(pol_y[j])) {
-              printZZX(cout, pol_x[j], ord_p);
-              cout << "[0]";
-              cout << endl;
-          }
-          else{
-              printZZX(cout, pol_x[j], ord_p);
-              printZZX(cout, pol_y[j], ord_p);
-              cout << endl;
-          }
-      }
+    // if(m_verbose)
+    // {
+    //   cout << "Input" << endl;
+    //   for(int j = 0; j < nslots; j++)
+    //   {
+    //       if(IsZero(pol_x[j])) {
+    //           cout << "[0]";
+    //           printZZX(cout, pol_y[j], ord_p);
+    //           cout << endl;
+    //       }
+    //       else if(IsZero(pol_y[j])) {
+    //           printZZX(cout, pol_x[j], ord_p);
+    //           cout << "[0]";
+    //           cout << endl;
+    //       }
+    //       else{
+    //           printZZX(cout, pol_x[j], ord_p);
+    //           printZZX(cout, pol_y[j], ord_p);
+    //           cout << endl;
+    //       }
+    //   }
 
-      cout << "Output" << endl;
-      print_decrypted(ctxt_res);
-      cout << endl;
-    }
-    printNamedTimer(cout, "Extraction");
-    printNamedTimer(cout, "ComparisonCircuitBivar");
-    printNamedTimer(cout, "ComparisonCircuitUnivar");
-    printNamedTimer(cout, "EqualityCircuit");
-    printNamedTimer(cout, "ShiftMul");
-    printNamedTimer(cout, "ShiftAdd");
-    printNamedTimer(cout, "Comparison");
+    // //   cout << "Output" << endl;
+    // //   print_decrypted(ctxt_res);
+    // //   cout << endl;
+    // }
+   
+	cout<<"About to decrypt"<<endl;
+    // ea.decrypt(ctxt_res, m_sk, decrypted);
 
-    const FHEtimer* comp_timer = getTimerByName("Comparison");
+	
 
-    cout << "Avg. time per integer: " << 1000.0 * comp_timer->getTime()/static_cast<double>(run+1)/static_cast<double>(numbers_size) << " ms" << endl;
-    cout << "Number of integers in one ciphertext "<< numbers_size << endl;
-
-    // remove the line below if it gives bizarre results 
-    ctxt_res.cleanUp();
-    capacity = ctxt_res.bitCapacity();
-    cout << "Final capacity: " << capacity << endl;
-    if (capacity < min_capacity)
-      min_capacity = capacity;
-    cout << "Min. capacity: " << min_capacity << endl;
-    cout << "Final size: " << ctxt_res.logOfPrimeSet()/log(2.0) << endl;
+	long nSlots = ea.size();
+    vector<ZZX> decrypted(nSlots);
     ea.decrypt(ctxt_res, m_sk, decrypted);
+		cout<<"Decrypted: "<<endl;
 
-    for(int i = 0; i < numbers_size; i++)
-    { 
-      if (decrypted[i * m_expansionLen] != expected_result[i * m_expansionLen])
-      {
-        printf("Slot %ld: ", i * m_expansionLen);
-        printZZX(cout, decrypted[i * m_expansionLen], ord_p);
-        cout << endl;
-        cout << "Failure" << endl;
-        return;
-      }
+    for(int i = 0; i < nSlots; i++)
+    {
+        if(IsZero(decrypted[i]))
+            cout << "[0]" << endl;
+        else {
+            printZZX(cout, decrypted[i], ord_p);
+            cout << endl;
+			
+        }
+		break;
     }
-    cout << endl;
-  }
+
+	// for(int k=0;k<1000;k++)
+	// {
+	// 	ctxt_res+=
+	// }
+
+	auto duration = duration_cast<microseconds>(stop - start);
+	// To get the value of duration use the count()
+	// member function on the duration object
+	cout <<"Time for comparison: "<< duration.count() << endl;
+
+	// Ctxt ctxt_x_2(m_pk);
+	// vector<ZZX> pol_fin(nslots);
+    // ea.encrypt(ctxt_x_2, m_pk, pol_fin);
+
+	// Ctxt f1(m_pk);
+	// vector<ZZX> pol_f1(nslots);
+	// pol_f1[0]=ZZX(INIT_MONO, 0, 3);
+    // ea.encrypt(f1, m_pk, pol_f1);
+
+	// Ctxt f2(m_pk);
+	// vector<ZZX> pol_f2(nslots);
+	// pol_f2[0]=ZZX(INIT_MONO, 0, 7);
+    // ea.encrypt(f2, m_pk, pol_f2);
+
+	// ctxt_x_2=f1;
+	// ctxt_x_2*=ctxt_res;
+	// ctxtx_x_2+=
+
+    // cout << endl;
+	// cout<<"Expected"<<endl;
+
+    // for(int i = 0; i < numbers_size; i++)
+    // { 
+    //   if (decrypted[i * m_expansionLen] != expected_result[i * m_expansionLen])
+    //   {
+    //     printf("Slot %ld: ", i * m_expansionLen);
+    //     printZZX(cout, decrypted[i * m_expansionLen], ord_p);
+    //     cout << endl;
+    //     cout << "Failure" << endl;
+    //     return;
+    //   }
+    // }
+    // cout << endl;
 }
 
 void Comparator::test_min_max(long runs) const
