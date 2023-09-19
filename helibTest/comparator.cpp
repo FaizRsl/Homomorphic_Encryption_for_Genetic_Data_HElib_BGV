@@ -2369,8 +2369,6 @@ void Comparator::test_compare(long runs) const
 	cout<<"About to decrypt"<<endl;
     // ea.decrypt(ctxt_res, m_sk, decrypted);
 
-	
-
 	long nSlots = ea.size();
     vector<ZZX> decrypted(nSlots);
     ea.decrypt(ctxt_res, m_sk, decrypted);
@@ -2398,26 +2396,55 @@ void Comparator::test_compare(long runs) const
 	// member function on the duration object
 	cout <<"Time for comparison: "<< duration.count() << endl;
 
-	// Ctxt ctxt_x_2(m_pk);
-	// vector<ZZX> pol_fin(nslots);
-    // ea.encrypt(ctxt_x_2, m_pk, pol_fin);
+	// Need to do - f=ctxt_res*f1+(1-ctxt_res)*f2
+	// Do - r1+=f1; r1*=ctxt_res
+	// r2+=f2; r2*=(1-ctxt_res)
+	// r+=r1
+	// r+=r2
 
-	// Ctxt f1(m_pk);
-	// vector<ZZX> pol_f1(nslots);
-	// pol_f1[0]=ZZX(INIT_MONO, 0, 3);
-    // ea.encrypt(f1, m_pk, pol_f1);
+	Ctxt ctxt_res_2(m_pk); ctxt_res_2=ctxt_res;
 
-	// Ctxt f2(m_pk);
-	// vector<ZZX> pol_f2(nslots);
-	// pol_f2[0]=ZZX(INIT_MONO, 0, 7);
-    // ea.encrypt(f2, m_pk, pol_f2);
+	Ctxt f(m_pk);
+	vector<ZZX> pol_fin(nslots);
+    ea.encrypt(f, m_pk, pol_fin);
 
-	// ctxt_x_2=f1;
-	// ctxt_x_2*=ctxt_res;
-	// ctxtx_x_2+=
+	Ctxt r1(m_pk);
+	vector<ZZX> pol_r1(nslots);
+    ea.encrypt(r1, m_pk, pol_r1);
 
-    // cout << endl;
-	// cout<<"Expected"<<endl;
+	Ctxt r2(m_pk);
+	vector<ZZX> pol_r2(nslots);
+    ea.encrypt(f, m_pk, pol_r2);
+
+	Ctxt f1(m_pk);
+	vector<ZZX> pol_f1(nslots);
+	pol_f1[0]=ZZX(INIT_MONO, 0, 3);			// f1=3
+    ea.encrypt(f1, m_pk, pol_f1);
+
+	Ctxt f2(m_pk);
+	vector<ZZX> pol_f2(nslots);
+	pol_f2[0]=ZZX(INIT_MONO, 0, 7);			// f2=7
+    ea.encrypt(f2, m_pk, pol_f2);
+
+	r1+=f1; r1*=ctxt_res;
+	r2+=f2; ctxt_res_2.addConstant(NTL::ZZX(-1l)); ctxt_res_2*=-1l; r2*=ctxt_res_2;
+	f+=r1; f+=r2;
+
+	vector<ZZX> f_dec(nSlots);
+    ea.decrypt(f, m_sk, f_dec);
+	cout<<"Decrypted f: "<<endl;
+
+    for(int i = 0; i < nSlots; i++)
+    {
+        if(IsZero(f_dec[i]))
+            cout << "[0]" << endl;
+        else {
+            printZZX(cout, f_dec[i], ord_p);
+            cout << endl;
+			
+        }
+		break;
+    }
 
     // for(int i = 0; i < numbers_size; i++)
     // { 
